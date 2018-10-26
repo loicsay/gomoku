@@ -1,4 +1,4 @@
-const N_MAX = 19; // Size of the board
+const N_MAX = 10; // Size of the board
 const N_WIN = 5; // Number of consecutive pawn to win
 let board = [[]];
 let turn = {
@@ -41,11 +41,11 @@ function checkBoard() {
   return 3;
 }
 
-//
-// Checking board functions
-//
+//                             //
+//  Checking board functions   //
+//                             //
 
-// Horizontal scan to add points to the score depending on the input
+// Horizontal scan and calculate score depending on the input
 function HorizontalScan(pawnValue) {
   let i,j;
   let score = 0;
@@ -80,7 +80,7 @@ function HorizontalScan(pawnValue) {
   return score;
 }
 
-// Vertical scan to add points to the score depending on the input
+// Vertical scan and calculate score depending on the input
 function verticalScan(pawnValue) {
   let i,j;
   let score = 0;
@@ -115,6 +115,130 @@ function verticalScan(pawnValue) {
   return score;
 }
 
+// Diagonal scan and calculate score depending on the input
+function diagonalScan(pawnValue) {
+  let i,j,w;
+  let score = 0;
+  let cpt1 = 0;
+  let cpt2 = 0;
+  for (w=0; w<N_MAX; w++) {
+		for (j=0, i=w; i<N_MAX-1; i++, j++) {
+			if (board[i][j].content === pawnValue){
+       if (board[i+1][j+1].content === pawnValue) {
+				cpt1++;
+        }
+      }
+			else {
+				switch (true) {
+          case (cpt1 >= N_WIN-1):
+            end = pawnValue;
+					  score += 1000;
+            break;
+          case (cpt1 === 1):
+					  score += 1;
+            break;
+          case (cpt1 === 2):
+					  score += 10;
+            break;
+          case (cpt1 === 3):
+					  score += 100;
+            break;
+			   }
+         cpt1 = 0;
+		  }
+	 }
+  }
+	for (w=1; w<N_MAX; w++) {
+		for(i=0, j=w; j<N_MAX-1; i++, j++) {
+			if (board[i][j].content === pawnValue) {
+        if (board[i+1][j+1].content === pawnValue) {
+				cpt2++;
+        }
+      }
+			else {
+        switch (true) {
+          case (cpt2 >= N_WIN-1):
+					  end = pawnValue;
+					  score += 1000;
+          case (cpt2 === 1):
+					  score += 1;
+            break;
+          case (cpt2 === 2):
+					score += 10;
+            break;
+          case (cpt2 === 3):
+					  score += 100;
+            break;
+			  }
+        cpt2 = 0;
+      }
+    }
+  }
+  return score;
+}
+
+// Reversed diagonal scan and calculate score depending on the input
+function reverseDiagonalScan(pawnValue) {
+  let i = N_MAX-1;
+	let cpt1 = 0;
+	let cpt2 = 0;
+	let cpt;
+	let score = 0;
+	let j;
+  	for (cpt=0; cpt<N_MAX-1; cpt++) {
+			for(j=cpt; j<N_MAX-1; j++) {
+        console.log("i : " + i);
+        console.log("j : " + j);
+        console.log(board[i][j]);
+    		if (board[i][j] === pawnValue) {
+          if (board[i-1][j+1] === pawnValue) {
+            cpt1++;
+          }
+        }
+				else {
+					if (cpt1 == N_WIN-1) {
+						end = pawnValue;
+						score += 1000;
+					}
+					if (cpt1 == 1)
+						score += 1;
+					if (cpt1 == 2)
+						score += 10;
+					if (cpt1 == 3)
+						score += 100;
+					cpt1 = 0;
+				}
+        --i;
+    	}
+    	i = N_MAX-1;
+      /*
+   		for(j=0; j<N_MAX-1; j++) {
+  			if (board[i][j] == pawnValue) {
+          if (board[i-1][j+1] == pawnValue) {
+            cpt2++;
+          }
+        }
+				else {
+					if (cpt2 == N_WIN-1) {
+						end = pawnValue;
+						score += 1000;
+					}
+					if (cpt2 == 1)
+						score += 1;
+					if (cpt2 == 2)
+						score += 10;
+					if (cpt1 == 3)
+						score += 100;
+					cpt2 = 0;
+	  		}
+      	--i;
+    	}
+    	i = N_MAX-1;
+      */
+    }
+    return score;
+}
+
 //
 // Initialisation functions
 //
@@ -130,8 +254,6 @@ function initBoard() { // Initialisation of the HTML game board
       case_tmp = document.createElement("div");
       case_tmp.className = "case";
       case_tmp.textContent = "O";
-      case_tmp.X = i; // Put the correct coordinates into X and Y for each case
-      case_tmp.Y = j;
       case_tmp.content = 0; // 0 for empty, 1 for player1, 2 for player2
       row_tmp.appendChild(case_tmp);
     }
@@ -157,8 +279,7 @@ function startGame() { // Adding interaction to the game board
         if (e.target.content === 0) {
           e.target.content = turn.value; // change the value of the case
           e.target.style.color = turn.color; // change the style of the case
-          console.log(verticalScan(1));
-          console.log(end);
+          reverseDiagonalScan(1);
           //
           // check if the board is full or if we have a winner
           //
