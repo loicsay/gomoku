@@ -186,10 +186,8 @@ function reverseDiagonalScan(pawnValue) {
 	let score = 0;
 	let j;
   	for (cpt=0; cpt<N_MAX-1; cpt++) {
-			for(j=cpt; j<N_MAX-1; j++) {
-        console.log("i : " + i);
-        console.log("j : " + j);
-        console.log(board[i][j]);
+
+			for (j=cpt; j<N_MAX-1; j++) {
     		if (board[i][j] === pawnValue) {
           if (board[i-1][j+1] === pawnValue) {
             cpt1++;
@@ -210,31 +208,23 @@ function reverseDiagonalScan(pawnValue) {
 				}
         --i;
     	}
-    	i = N_MAX-1;
-      /*
-   		for(j=0; j<N_MAX-1; j++) {
-  			if (board[i][j] == pawnValue) {
-          if (board[i-1][j+1] == pawnValue) {
-            cpt2++;
+      j = 0;
+      for (i=N_MAX-2-cpt; i>0; i--) {
+        if (board[i][j] === pawnValue) {
+          if (board[i-1][j+1] === pawnValue) {
+            cpt1++;
           }
+          if (cpt1 == 1)
+            score += 1;
+          if (cpt1 == 2)
+            score += 10;
+          if (cpt1 == 3)
+            score += 100;
+          cpt1 = 0;
         }
-				else {
-					if (cpt2 == N_WIN-1) {
-						end = pawnValue;
-						score += 1000;
-					}
-					if (cpt2 == 1)
-						score += 1;
-					if (cpt2 == 2)
-						score += 10;
-					if (cpt1 == 3)
-						score += 100;
-					cpt2 = 0;
-	  		}
-      	--i;
-    	}
-    	i = N_MAX-1;
-      */
+        j++;
+      }
+      i = N_MAX-1; // re-init "i" for the next loop
     }
     return score;
 }
