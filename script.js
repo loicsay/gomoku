@@ -46,7 +46,7 @@ function checkBoard() {
 //                             //
 
 // Horizontal scan and calculate score depending on the input
-function HorizontalScan(pawnValue) {
+function horizontalScan(pawnValue) {
   let i,j;
   let score = 0;
   let cpt = 0;
@@ -91,6 +91,7 @@ function verticalScan(pawnValue) {
         if (board[i+1][j].content === pawnValue) {
           cpt++;
         }
+      }
         else {
           switch (cpt) {
             case N_WIN-1:
@@ -111,7 +112,6 @@ function verticalScan(pawnValue) {
         }
       }
     }
-  }
   return score;
 }
 
@@ -186,41 +186,57 @@ function reverseDiagonalScan(pawnValue) {
 	let score = 0;
 	let j;
   	for (cpt=0; cpt<N_MAX-1; cpt++) {
-
+      // Scanning the down half
 			for (j=cpt; j<N_MAX-1; j++) {
-    		if (board[i][j] === pawnValue) {
-          if (board[i-1][j+1] === pawnValue) {
+    		if (board[i][j].content === pawnValue) {
+          if (board[i-1][j+1].content === pawnValue) {
             cpt1++;
           }
         }
 				else {
-					if (cpt1 == N_WIN-1) {
-						end = pawnValue;
-						score += 1000;
-					}
-					if (cpt1 == 1)
-						score += 1;
-					if (cpt1 == 2)
-						score += 10;
-					if (cpt1 == 3)
-						score += 100;
+					switch (true) {
+            case (cpt1 >= N_WIN-1):
+              end = pawnValue;
+						  score += 1000;
+              break;
+					  case (cpt1 === 1):
+						  score += 1;
+              break;
+					  case (cpt1 === 2):
+						  score += 10;
+              break;
+					  case (cpt1 === 3):
+						  score += 100;
+              break;
+          }
 					cpt1 = 0;
 				}
         --i;
     	}
       j = 0;
+      // Scanning the high half
       for (i=N_MAX-2-cpt; i>0; i--) {
-        if (board[i][j] === pawnValue) {
-          if (board[i-1][j+1] === pawnValue) {
-            cpt1++;
+        if (board[i][j].content === pawnValue) {
+          if (board[i-1][j+1].content === pawnValue) {
+            cpt2++;
           }
-          if (cpt1 == 1)
-            score += 1;
-          if (cpt1 == 2)
-            score += 10;
-          if (cpt1 == 3)
-            score += 100;
-          cpt1 = 0;
+          else {
+            switch (true) {
+              case (cpt2 >= N_WIN-1):
+                end = pawnValue;
+  						  score += 1000;
+                break;
+  					  case (cpt2 === 1):
+  						  score += 1;
+                break;
+  					  case (cpt2 === 2):
+  						  score += 10;
+                break;
+  					  case (cpt2 === 3):
+  						  score += 100;
+                break;
+            }
+          }
         }
         j++;
       }
@@ -269,11 +285,9 @@ function startGame() { // Adding interaction to the game board
         if (e.target.content === 0) {
           e.target.content = turn.value; // change the value of the case
           e.target.style.color = turn.color; // change the style of the case
-          reverseDiagonalScan(1);
           //
           // check if the board is full or if we have a winner
           //
-          changeTurn();
         }
       });
       k++;
