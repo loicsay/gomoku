@@ -13,10 +13,14 @@ p {
   height: 50px;
   background-color: black;
   font-size: 1em;
-  color: red;
+  color: white;
   text-align: center;
   display: table-cell;
   vertical-align: middle;
+  user-select: none;
+}
+.case:hover {
+  color: blue;
 }
 .board {
   display: table;
