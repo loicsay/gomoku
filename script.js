@@ -109,61 +109,37 @@ function verticalScan(pawn_value) {
 }
 
 // Diagonal scan and calculate score depending on the input
-function diagonalScan(pawnValue) {
+function diagonalScan(pawn_value) {
   let i,j,w;
   let score = 0;
-  let cpt1 = 0;
-  let cpt2 = 0;
+  let pawn_chain1 = 0;
+  let pawn_chain2 = 0;
   for (w=0; w<N_MAX; w++) {
 		for (j=0, i=w; i<N_MAX-1; i++, j++) {
-			if (board[i][j].content === pawnValue){
-       if (board[i+1][j+1].content === pawnValue) {
-				cpt1++;
+			if (board[i][j].content === pawn_value && board[i+1][j+1].content === pawn_value) {
+				pawn_chain1++;
+        if (i === N_MAX-2 && j === 0) { // For the last case
+          score += calculateScore(pawn_chain1, pawn_value);
         }
       }
 			else {
-				switch (true) {
-          case (cpt1 >= N_WIN-1):
-            end = pawnValue;
-					  score += 1000;
-            break;
-          case (cpt1 === 1):
-					  score += 1;
-            break;
-          case (cpt1 === 2):
-					  score += 10;
-            break;
-          case (cpt1 === 3):
-					  score += 100;
-            break;
-			   }
-         cpt1 = 0;
+        score += calculateScore(pawn_chain1, pawn_value);
+        pawn_chain1 = 0;
 		  }
 	 }
   }
 	for (w=1; w<N_MAX; w++) {
 		for(i=0, j=w; j<N_MAX-1; i++, j++) {
-			if (board[i][j].content === pawnValue) {
-        if (board[i+1][j+1].content === pawnValue) {
-				cpt2++;
+      console.log(board[i][j]);
+			if (board[i][j].content === pawn_value && board[i+1][j+1].content === pawn_value) {
+				pawn_chain2++;
+        if (i === 0 && j === N_MAX-2) { // For the last case
+          score += calculateScore(pawn_chain2, pawn_value);
         }
       }
 			else {
-        switch (true) {
-          case (cpt2 >= N_WIN-1):
-					  end = pawnValue;
-					  score += 1000;
-          case (cpt2 === 1):
-					  score += 1;
-            break;
-          case (cpt2 === 2):
-					score += 10;
-            break;
-          case (cpt2 === 3):
-					  score += 100;
-            break;
-			  }
-        cpt2 = 0;
+        score += calculateScore(pawn_chain2, pawn_value);
+        pawn_chain2 = 0;
       }
     }
   }
@@ -171,61 +147,61 @@ function diagonalScan(pawnValue) {
 }
 
 // Reversed diagonal scan and calculate score depending on the input
-function reverseDiagonalScan(pawnValue) {
+function reverseDiagonalScan(pawn_value) {
   let i = N_MAX-1;
-	let cpt1 = 0;
-	let cpt2 = 0;
+	let pawn_chain1 = 0;
+	let pawn_chain2 = 0;
 	let cpt;
 	let score = 0;
 	let j;
   	for (cpt=0; cpt<N_MAX-1; cpt++) {
       // Scanning the down half
 			for (j=cpt; j<N_MAX-1; j++) {
-    		if (board[i][j].content === pawnValue) {
-          if (board[i-1][j+1].content === pawnValue) {
-            cpt1++;
+    		if (board[i][j].content === pawn_value) {
+          if (board[i-1][j+1].content === pawn_value) {
+            pawn_chain1++;
           }
         }
 				else {
 					switch (true) {
-            case (cpt1 >= N_WIN-1):
-              end = pawnValue;
+            case (pawn_chain1 >= N_WIN-1):
+              end = pawn_value;
 						  score += 1000;
               break;
-					  case (cpt1 === 1):
+					  case (pawn_chain1 === 1):
 						  score += 1;
               break;
-					  case (cpt1 === 2):
+					  case (pawn_chain1 === 2):
 						  score += 10;
               break;
-					  case (cpt1 === 3):
+					  case (pawn_chain1 === 3):
 						  score += 100;
               break;
           }
-					cpt1 = 0;
+					pawn_chain1 = 0;
 				}
         --i;
     	}
       j = 0;
       // Scanning the high half
       for (i=N_MAX-2-cpt; i>0; i--) {
-        if (board[i][j].content === pawnValue) {
-          if (board[i-1][j+1].content === pawnValue) {
-            cpt2++;
+        if (board[i][j].content === pawn_value) {
+          if (board[i-1][j+1].content === pawn_value) {
+            pawn_chain2++;
           }
           else {
             switch (true) {
-              case (cpt2 >= N_WIN-1):
-                end = pawnValue;
+              case (pawn_chain2 >= N_WIN-1):
+                end = pawn_value;
   						  score += 1000;
                 break;
-  					  case (cpt2 === 1):
+  					  case (pawn_chain2 === 1):
   						  score += 1;
                 break;
-  					  case (cpt2 === 2):
+  					  case (pawn_chain2 === 2):
   						  score += 10;
                 break;
-  					  case (cpt2 === 3):
+  					  case (pawn_chain2 === 3):
   						  score += 100;
                 break;
             }
@@ -278,7 +254,7 @@ function startGame() { // Adding interaction to the game board
         if (e.target.content === 0) {
           e.target.content = turn.value; // change the value of the case
           e.target.style.color = turn.color; // change the style of the case
-          console.log(verticalScan(1));
+          console.log(diagonalScan(1));
           //
           // check if the board is full or if we have a winner
           //
