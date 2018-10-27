@@ -1,4 +1,4 @@
-const N_MAX = 10; // Size of the board
+const N_MAX = 19; // Size of the board
 const N_WIN = 5; // Number of consecutive pawn to win
 let board = [[]];
 let turn = {
@@ -193,18 +193,24 @@ function reverseDiagonalScan(pawn_value) {
 // Initialisation functions
 //
 function initBoard() { // Initialisation of the HTML game board
-  let i,j;
-  let board = document.createElement("board");
+  let i,j,k;
+  let board = document.createElement("div");
+  board.className = "board";
   let row_tmp;
   let case_tmp;
+  let subcase_tmp;
   for (i=0; i<N_MAX; i++) {
     row_tmp = document.createElement("div");
     row_tmp.className = "row";
     for (j=0; j<N_MAX; j++) {
       case_tmp = document.createElement("div");
       case_tmp.className = "case";
-      case_tmp.textContent = "O";
       case_tmp.content = 0; // 0 for empty, 1 for player1, 2 for player2
+      for(k=0; k<4; k++) { // Create 4 subcases in order to create one case
+        subcase_tmp = document.createElement("div")
+        subcase_tmp.className = "subcase";
+        case_tmp.appendChild(subcase_tmp);
+      }
       row_tmp.appendChild(case_tmp);
     }
     board.appendChild(row_tmp);
