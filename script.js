@@ -44,36 +44,42 @@ function checkBoard() {
 //                             //
 //  Checking board functions   //
 //                             //
+function calculateScore(pawn_chain, pawn_value) { // return the score depending on the pawn chain
+  switch (true) {
+    case (pawn_chain >= N_WIN-1):
+      end = pawn_value;
+      return 1000;
+      break;
+    case (pawn_chain === 1):
+      return 1;
+      break;
+    case (pawn_chain === 2):
+      return 10;
+      break;
+    case (pawn_chain === 3):
+      return 100;
+      break;
+    default:
+      return 0;
+  }
+}
 
 // Horizontal scan and calculate score depending on the input
-function horizontalScan(pawnValue) {
+function horizontalScan(pawn_value) {
   let i,j;
   let score = 0;
-  let cpt = 0;
-  for (i=0; i<N_MAX; i++) {
-    for (j=0; j<N_MAX-1; j++) {
-      if (board[i][j].content === pawnValue) {
-        if (board[i][j+1].content === pawnValue) {
-          cpt++;
-        }
-        else {
-          switch (cpt) {
-            case N_WIN-1:
-              end = pawnValue;
-              score += 1000;
-              break;
-            case 1:
-              score += 1;
-              break;
-            case 2:
-              score += 10;
-              break;
-            case 3:
-              score += 100;
-              break;
+  let pawn_chain = 0;
+  for (i=0; i<N_MAX; i++) { // Scans the rows
+    for (j=0; j<N_MAX-1; j++) { // Scans the columns
+      if (board[i][j].content === pawn_value && board[i][j+1].content === pawn_value) {
+          pawn_chain++;
+          if (i === N_MAX-1 && j === N_MAX-2) { // For the last case
+            score += calculateScore(pawn_chain, pawn_value);
           }
-          cpt = 0;
-        }
+      }
+      else {
+        score += calculateScore(pawn_chain, pawn_value);
+        pawn_chain = 0;
       }
     }
   }
@@ -81,34 +87,21 @@ function horizontalScan(pawnValue) {
 }
 
 // Vertical scan and calculate score depending on the input
-function verticalScan(pawnValue) {
+function verticalScan(pawn_value) {
   let i,j;
   let score = 0;
-  let cpt = 0;
+  let pawn_chain = 0;
   for (j=0; j<N_MAX; j++) {
     for (i=0; i<N_MAX-1; i++) {
-      if (board[i][j].content === pawnValue) {
-        if (board[i+1][j].content === pawnValue) {
-          cpt++;
-        }
-      }
-        else {
-          switch (cpt) {
-            case N_WIN-1:
-              end = pawnValue;
-              score += 1000;
-              break;
-            case 1:
-              score += 1;
-              break;
-            case 2:
-              score += 10;
-              break;
-            case 3:
-              score += 100;
-              break;
+      if (board[i][j].content === pawn_value && board[i+1][j].content === pawn_value) {
+          pawn_chain++;
+          if (i === N_MAX-2 && j === N_MAX-1) { // For the last case
+            score += calculateScore(pawn_chain, pawn_value);
           }
-          cpt = 0;
+        }
+        else {
+          score += calculateScore(pawn_chain, pawn_value);
+          pawn_chain = 0;
         }
       }
     }
@@ -285,6 +278,7 @@ function startGame() { // Adding interaction to the game board
         if (e.target.content === 0) {
           e.target.content = turn.value; // change the value of the case
           e.target.style.color = turn.color; // change the style of the case
+          console.log(verticalScan(1));
           //
           // check if the board is full or if we have a winner
           //
