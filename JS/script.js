@@ -237,6 +237,7 @@ function startGame() { // Adding interaction to the game board
   const board_tmp = document.querySelectorAll(".case");
   const p1score = document.querySelector(".p1score");
   const p2score = document.querySelector(".p2score");
+  const title = document.querySelector(".title");
   for (i=0; i<N_MAX; i++) { // Fill the two dimension array board
     board.push([]);
     for (j=0; j<N_MAX; j++) {
@@ -251,8 +252,8 @@ function startGame() { // Adding interaction to the game board
           p1score.innerHTML = score.player1;
           p2score.innerHTML = score.player2;
           if (end !== 0) { // If the game is over
-            console.log("The winner is : " + end);
             turn.value = 0;
+            title.innerHTML = "Player " + end + " won!";
           }
           else {
             changeTurn();
