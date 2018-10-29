@@ -3,10 +3,13 @@ const N_WIN = 5; // Number of consecutive pawn to win
 let board = [[]];
 let turn = {
   value: 1,
-  color: "yellow"
+  color: "#469990"
 }
-let end;
-let score;
+let end = 0;
+let score = {
+  player1: 0,
+  player2: 0
+}
 
 //
 // Functions we need to check variables and to handle the game
@@ -14,11 +17,11 @@ let score;
 function changeTurn() { // Changing the turn variable
   if (turn.value === 1) {
     turn.value = 2;
-    turn.color = "green";
+    turn.color = "#900C3F";
   }
   else {
     turn.value = 1;
-    turn.color = "yellow";
+    turn.color = "#469990";
   }
 }
 
@@ -32,13 +35,6 @@ function boardIsFull() {
     }
   }
   return true;
-}
-
-function checkBoard() {
-  if (boardIsFull()) {
-    return 0;
-  }
-  return 3;
 }
 
 //                             //
@@ -171,7 +167,6 @@ function reverseDiagonalScan(pawn_value) {
     j = 0;
     // Scanning the high half
     for (i=N_MAX-2-cpt; i>0; i--) {
-      console.log(board[i][j]);
       if (board[i][j].content === pawn_value && board[i-1][j+1].content === pawn_value) {
           pawn_chain2++;
           if (i === 1 && j === 0) { // For the last case
@@ -189,6 +184,17 @@ function reverseDiagonalScan(pawn_value) {
   return score;
 }
 
+function checkBoard() {
+  score.player1 = horizontalScan(1) + verticalScan(1) + diagonalScan(1) + reverseDiagonalScan(1);
+  score.player2 = horizontalScan(2) + verticalScan(2) + diagonalScan(2) + reverseDiagonalScan(2);
+  if (end != 0) {
+    console.log("Player " + end + " won !");
+  }
+  if (boardIsFull()) {
+    console.log("The board is full.");
+  }
+}
+
 //
 // Initialisation functions
 //
@@ -198,7 +204,7 @@ function initBoard() { // Initialisation of the HTML game board
   board.className = "board";
   let row_tmp;
   let case_tmp;
-  let subcase_tmp;
+  let pawn_tmp;
   for (i=0; i<N_MAX; i++) {
     row_tmp = document.createElement("div");
     row_tmp.className = "row";
@@ -206,12 +212,12 @@ function initBoard() { // Initialisation of the HTML game board
       case_tmp = document.createElement("div");
       case_tmp.className = "case";
       case_tmp.content = 0; // 0 for empty, 1 for player1, 2 for player2
-      for(k=0; k<4; k++) { // Create 4 subcases in order to create one case
-        subcase_tmp = document.createElement("div")
-        subcase_tmp.className = "subcase";
-        case_tmp.appendChild(subcase_tmp);
-      }
+      pawn_tmp = document.createElement("pawn");
+      pawn_tmp.className = "pawn";
+      case_tmp.appendChild(pawn_tmp); // Add the pawn
+
       row_tmp.appendChild(case_tmp);
+
     }
     board.appendChild(row_tmp);
   }
@@ -233,9 +239,16 @@ function startGame() { // Adding interaction to the game board
       board[i][j] = board_tmp[k];
       board[i][j].addEventListener("click", function(e) {
         if (e.target.content === 0) {
-          e.target.content = turn.value; // change the value of the case
-          e.target.style.color = turn.color; // change the style of the case
-          console.log(reverseDiagonalScan(1));
+          e.target.content = turn.value; // Change the value of the case
+          e.target.style.color = turn.color; // Change the style of the case
+          e.target.firstChild.style.backgroundColor = turn.color; // Set the color of the pawn
+          e.target.firstChild.style.display = "block"; // Display the pawn
+          checkBoard();
+          if (end === true) { // If the game is over
+          }
+          else {
+            changeTurn();
+          }
           //
           // check if the board is full or if we have a winner
           //
@@ -246,5 +259,6 @@ function startGame() { // Adding interaction to the game board
   }
   board.pop();
 }
+
 
 startGame();
