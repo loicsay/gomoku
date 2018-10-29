@@ -230,7 +230,7 @@ function disableBoard() {
 //
 // Main function : start the game by calling different functions
 //
-function startGame() { // Adding interaction to the game board
+function startGame() { // Adding leteraction to the game board
   initBoard();
   let i,j;
   let k = 0;
@@ -255,12 +255,24 @@ function startGame() { // Adding interaction to the game board
             turn.value = 0;
             title.innerHTML = "Player " + end + " won!";
           }
+          else if (boardIsFull()) {
+            turn.value = 0; // Disable the board
+            if (score.player1 > score.player2) {
+              end = 1;
+              title.innerHTML = "Player " + end + " won!";
+            }
+            else if (score.player1 < score.player2) {
+              end = 2;
+              title.innerHTML = "Player " + end + " won!";
+            }
+            else if (score.player1 === score.player2) {
+              end = 3;
+              title.innerHTML = "Draw!";
+            }
+          }
           else {
             changeTurn();
           }
-          //
-          // check if the board is full or if we have a winner
-          //
         }
       });
       k++;
