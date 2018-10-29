@@ -187,12 +187,6 @@ function reverseDiagonalScan(pawn_value) {
 function checkBoard() {
   score.player1 = horizontalScan(1) + verticalScan(1) + diagonalScan(1) + reverseDiagonalScan(1);
   score.player2 = horizontalScan(2) + verticalScan(2) + diagonalScan(2) + reverseDiagonalScan(2);
-  if (end != 0) {
-    console.log("Player " + end + " won !");
-  }
-  if (boardIsFull()) {
-    console.log("The board is full.");
-  }
 }
 
 //
@@ -223,6 +217,16 @@ function initBoard() { // Initialisation of the HTML game board
   insertion.appendChild(board);
 }
 
+function disableBoard() {
+  let i,j;
+  for (i=0; i<N_MAX; i++) {
+    for (j=0; j<N_MAW; j++) {
+      board[i][j].removeEventListener
+    }
+  }
+
+}
+
 //
 // Main function : start the game by calling different functions
 //
@@ -230,19 +234,25 @@ function startGame() { // Adding interaction to the game board
   initBoard();
   let i,j;
   let k = 0;
-  board_tmp = document.querySelectorAll(".case");
+  const board_tmp = document.querySelectorAll(".case");
+  const p1score = document.querySelector(".p1score");
+  const p2score = document.querySelector(".p2score");
   for (i=0; i<N_MAX; i++) { // Fill the two dimension array board
     board.push([]);
     for (j=0; j<N_MAX; j++) {
       board[i][j] = board_tmp[k];
       board[i][j].addEventListener("click", function(e) {
-        if (e.target.content === 0) {
+        if (e.target.content === 0 && turn.value !== 0) {
           e.target.content = turn.value; // Change the value of the case
           e.target.style.color = turn.color; // Change the style of the case
           e.target.firstChild.style.backgroundColor = turn.color; // Set the color of the pawn
           e.target.firstChild.style.display = "block"; // Display the pawn
           checkBoard();
-          if (end === true) { // If the game is over
+          p1score.innerHTML = score.player1;
+          p2score.innerHTML = score.player2;
+          if (end !== 0) { // If the game is over
+            console.log("The winner is : " + end);
+            turn.value = 0;
           }
           else {
             changeTurn();

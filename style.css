@@ -47,6 +47,14 @@ p {
   color: #900C3F;
 }
 
+.p1score {
+  margin-top: 15px;
+}
+
+.p2score {
+  margin-top: 15px;
+}
+
 .board {
   width: 608px;
   padding: auto;
