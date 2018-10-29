@@ -8,9 +8,47 @@ p {
   padding: 0;
 }
 
+.title {
+  font-family: 'Press Start 2P', sans-serif;
+  font-size: 3em;
+  margin: 60px;
+  text-align: center;
+}
+
+.game {
+  display: flex;
+  width: 850px;
+  margin: auto;
+}
+
+.infos {
+  padding-top: 70px;
+  font-family: 'Press Start 2P', sans-serif;
+  font-size: 1.2em;
+  width: 200px;
+}
+
+.score {
+  text-align: center;
+  font-size: 1.3em;
+  margin: 30px auto;
+}
+
+.player {
+  margin: 30px auto;
+  text-align: center
+}
+
+.player1 {
+  color: #469990;
+}
+
+.player2 {
+  color: #900C3F;
+}
+
 .board {
-  margin: 100px;
-  width: 798px;
+  width: 608px;
   padding: auto;
   font-size: 0;
   border-color: #FA812F;
@@ -19,15 +57,15 @@ p {
 }
 .row {
   display: block;
-  width: 798px;
+  width: 608px;
   font-size: 0;
 }
 
 .case {
   font-size: 0;
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   font-size: 0;
   display: inline-block;
   border-color: #FA812F;
@@ -44,9 +82,9 @@ p {
   display: none;
   background-color: black;
   position: absolute;
-  height: 26px;
-  width: 26px;
+  height: 20px;
+  width: 20px;
   border-radius: 50%;
-  left: 7px;
-  top: 7px;
+  left: 5px;
+  top: 5px;
 }

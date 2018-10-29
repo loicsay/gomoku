@@ -215,13 +215,11 @@ function initBoard() { // Initialisation of the HTML game board
       pawn_tmp = document.createElement("pawn");
       pawn_tmp.className = "pawn";
       case_tmp.appendChild(pawn_tmp); // Add the pawn
-
       row_tmp.appendChild(case_tmp);
-
     }
     board.appendChild(row_tmp);
   }
-  let insertion = document.querySelector("body");
+  let insertion = document.querySelector(".game");
   insertion.appendChild(board);
 }
 
@@ -259,6 +257,5 @@ function startGame() { // Adding interaction to the game board
   }
   board.pop();
 }
-
 
 startGame();
